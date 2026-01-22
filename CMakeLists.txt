@@ -1,32 +1,35 @@
 #--------------------------------- FILE INFO ----------------------------------#
 # Filename           : CMakeLists.txt                                          #
 #                                                                              #
-# Top level CMakeLists.txt file                                                #
+# Top level CMakeLists.txt file (for this software repo)                       #
 #                                                                              #
 #------------------------------------------------------------------------------#
 cmake_minimum_required(VERSION 4.0.2)
-project(hello_world_lib LANGUAGES C)
+project(hello_world_lib LANGUAGES C) # <== Name your software project
 
 include(FetchContent)
 
-# \/ === ADD ALL GITHUB PROJECT DEPENDENCIES HERE === \/
+# \/=== Add dependencies to other GitHub repos
+# Example dependency on Hello World project (check out Repeat Hello World project):
 #FetchContent_Declare(
-#    #fetched_item_name_here
-#    GIT_REPOSITORY https://github.com/Mouse-Unit-07/software-hello-world.git
+#    print_hello_world
+#    GIT_REPOSITORY https://github.com/Mouse-Unit-07/experiment-software-hello-world
 #    GIT_TAG main
 #)
-#FetchContent_MakeAvailable(#fetched_item_name_here)
+# FetchContent_MakeAvailable(print_hello_world)
 
-add_library(hello_world_lib STATIC)
+add_library(hello_world_lib STATIC) # <== Define your build target
 
-# \/ === ADD SOURCE SUBDIRECTORIES HERE === \/
+# \/=== Add all interface directories (each w/ a CMakeLists.txt)
 add_subdirectory(hello_world)
 
+# \/=== Add all directories w/ header files
 target_include_directories(hello_world_lib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/hello_world
 )
 
-# \/ === LINK TO GITHUB DEPENDENCIES HERE === \/
-#target_link_libraries(hello_world_lib PUBLIC
-#    #library_name_here
+# \/=== Link to other GitHub repos
+# Example dependency on Hello World project (check out Repeat Hello World project):
+#target_link_libraries(repeat_hello_world_lib PUBLIC
+#    hello_world_lib
 #)
