@@ -23,9 +23,9 @@ extern "C" {
 /*============================================================================*/
 namespace
 {
-void failWithMessageIfNull(const void *file, const char *message)
+void failWithMessageIfNull(const void *ptr, const char *message)
 {
-    if (file == nullptr) {
+    if (ptr == nullptr) {
         FAIL(message);
     }
 }
@@ -36,13 +36,13 @@ void failWithMessageIfNull(const void *file, const char *message)
 /*============================================================================*/
 TEST_GROUP(PrintHelloTest)
 {
-    FILE *originalOutput{nullptr};
+    FILE *standardOutput{nullptr};
 
     void setup() override
     {
-        originalOutput = stdout;
-        FILE *spy_output = freopen("test_output.txt", "w+", stdout);
-        failWithMessageIfNull(spy_output, 
+        standardOutput = stdout;
+        FILE *spyOutput = freopen("test_output.txt", "w+", stdout);
+        failWithMessageIfNull(spyOutput, 
             "Failed to redirect stdout to test_output.txt");
     }
 
@@ -50,7 +50,7 @@ TEST_GROUP(PrintHelloTest)
     {
         failWithMessageIfNull(stdout, "stdout is nullptr");
         fclose(stdout);
-        FILE *restoredOutput = freopen("CON", "w", originalOutput);
+        FILE *restoredOutput = freopen("CON", "w", standardOutput);
         failWithMessageIfNull(restoredOutput,
             "Failed to restore stdout to console");
     }
