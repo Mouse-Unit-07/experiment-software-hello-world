@@ -18,7 +18,7 @@ add_executable(test_hello_world # <=== Define your test target
 )
 
 target_link_libraries(test_hello_world PRIVATE # <=== Rename to your test target
-    hello_world_lib # <== Rename to your build target
+    hello_world_lib # <== Link to all libraries defined by your software project needed in the executable
     CppUTest::CppUTest
     CppUTestExt
 )
