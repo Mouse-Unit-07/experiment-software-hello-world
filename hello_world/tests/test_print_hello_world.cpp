@@ -1,17 +1,17 @@
 /*================================ FILE INFO =================================*/
 /* Filename           : test_print_hello_world.cpp                            */
 /*                                                                            */
-/* File description here...                                                   */
+/* Test implementation for print_hello_world.c                                */
 /*                                                                            */
 /*============================================================================*/
 
 /*============================================================================*/
 /*                               Include Files                                */
 /*============================================================================*/
-#include <cstdint>
+#include <array>
 #include <cstdio>
-#include <cstring>
 #include <fstream>
+
 extern "C" {
 #include "print_hello_world.h"
 }
@@ -21,11 +21,14 @@ extern "C" {
 /*============================================================================*/
 /*                             Private Definitions                            */
 /*============================================================================*/
-static void failWithMessageIfNull(FILE *file, const char *fail_message)
+namespace
+{
+void failWithMessageIfNull(const void *file, const char *message)
 {
     if (file == nullptr) {
-        FAIL(fail_message);
+        FAIL(message);
     }
+}
 }
 
 /*============================================================================*/
@@ -33,22 +36,23 @@ static void failWithMessageIfNull(FILE *file, const char *fail_message)
 /*============================================================================*/
 TEST_GROUP(PrintHelloTest)
 {
-    FILE *original_stdout = nullptr;
+    FILE *originalOutput{nullptr};
 
-    void setup()
+    void setup() override
     {
-        original_stdout = stdout;
-        FILE *file = freopen("test_output.txt", "w+", stdout);
-        failWithMessageIfNull(file, 
+        originalOutput = stdout;
+        FILE *spy_output = freopen("test_output.txt", "w+", stdout);
+        failWithMessageIfNull(spy_output, 
             "Failed to redirect stdout to test_output.txt");
     }
 
-    void teardown()
+    void teardown() override
     {
         failWithMessageIfNull(stdout, "stdout is nullptr");
         fclose(stdout);
-        FILE *file = freopen("CON", "w", original_stdout);
-        failWithMessageIfNull(file, "Failed to restore stdout to console");
+        FILE *restoredOutput = freopen("CON", "w", originalOutput);
+        failWithMessageIfNull(restoredOutput,
+            "Failed to restore stdout to console");
     }
 };
 
@@ -57,10 +61,8 @@ TEST_GROUP(PrintHelloTest)
 /*============================================================================*/
 TEST(PrintHelloTest, PrintsHelloWorld)
 {
-    enum {
-        MAX_BUFFER_SIZE = 128u
-    };
-    char buffer[MAX_BUFFER_SIZE] = {0};
+    constexpr std::size_t MAX_BUFFER_SIZE{128};
+    std::array<char, MAX_BUFFER_SIZE> buffer{};
 
     printHelloWorld();
 
@@ -69,8 +71,8 @@ TEST(PrintHelloTest, PrintsHelloWorld)
     FILE *file = fopen("test_output.txt", "r");
     failWithMessageIfNull(file, "Failed to open test output file");
 
-    fread(buffer, sizeof(char), sizeof(buffer), file);
+    fread(buffer.data(), sizeof(char), buffer.size(), file);
     fclose(file);
 
-    STRCMP_EQUAL("Hello World\r\n", buffer);
+    STRCMP_EQUAL("Hello World\r\n", buffer.data());
 }
