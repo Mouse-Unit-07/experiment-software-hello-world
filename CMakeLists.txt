@@ -18,18 +18,5 @@ include(FetchContent)
 #)
 # FetchContent_MakeAvailable(print_hello_world)
 
-add_library(hello_world_lib STATIC) # <== Define your build target
-
 # \/=== Add all interface directories (each w/ a CMakeLists.txt)
 add_subdirectory(hello_world)
-
-# \/=== Add all directories w/ header files
-target_include_directories(hello_world_lib PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/hello_world
-)
-
-# \/=== Link to other GitHub repos
-# Example dependency on Hello World project (check out Repeat Hello World project):
-#target_link_libraries(repeat_hello_world_lib PUBLIC
-#    hello_world_lib
-#)
