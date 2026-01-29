@@ -34,7 +34,7 @@ static const char HELLO_WORLD[] = "Hello World\r\n";
 /*----------------------------------------------------------------------------*/
 /*                         Public Function Definitions                        */
 /*----------------------------------------------------------------------------*/
-void printHelloWorld(void)
+void print_hello_world(void)
 {
     printf(HELLO_WORLD);
 }
