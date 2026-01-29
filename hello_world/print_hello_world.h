@@ -15,6 +15,6 @@
 /*----------------------------------------------------------------------------*/
 /*                         Public Function Prototypes                         */
 /*----------------------------------------------------------------------------*/
-void printHelloWorld(void);
+void print_hello_world(void);
 
 #endif /* PRINT_HELLO_WORLD_H_ */
