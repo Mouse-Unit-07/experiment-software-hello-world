@@ -21,13 +21,8 @@ extern "C" {
 /*============================================================================*/
 /*                             Public Definitions                             */
 /*============================================================================*/
-extern "C"
-{
-
 FILE *standard_output{nullptr};
-const char TEST_FILE[] = "test_output.txt";
-
-}
+constexpr const char *TEST_FILE{"test_output.txt"};
 
 void redirect_stdout_to_file(void)
 {
@@ -37,13 +32,16 @@ void redirect_stdout_to_file(void)
 
 void check_printf_output(void)
 {
-    constexpr std::size_t MAX_BUFFER_SIZE{128};
-    std::array<char, MAX_BUFFER_SIZE> buffer{};
-    
-    FILE *file = fopen("test_output.txt", "r");
-    CHECK(file != NULL);
-    fread(buffer.data(), sizeof(char), buffer.size(), file);
+    constexpr std::size_t kMaxBufferSize = 128;
+    std::array<char, kMaxBufferSize> buffer{};
+
+    FILE* file = fopen(TEST_FILE, "r");
+    CHECK(file != nullptr);
+    const size_t bytes_read =
+        fread(buffer.data(), 1, buffer.size() - 1, file);
+    CHECK(bytes_read > 0);
     fclose(file);
+
     STRCMP_EQUAL("Hello World\r\n", buffer.data());
 }
 
@@ -55,30 +53,18 @@ void restore_stdout(void)
 }
 
 /*============================================================================*/
-/*                            Mock Implementations                            */
-/*============================================================================*/
-extern "C"
-{
-
-/* none */
-
-}
-
-/*============================================================================*/
 /*                                 Test Group                                 */
 /*============================================================================*/
 TEST_GROUP(PrintHelloTest)
 {
-    
-
     void setup() override
     {
-
+        redirect_stdout_to_file();
     }
 
     void teardown() override
     {
-
+        restore_stdout();
     }
 };
 
@@ -87,11 +73,7 @@ TEST_GROUP(PrintHelloTest)
 /*============================================================================*/
 TEST(PrintHelloTest, PrintsHelloWorld)
 {
-    redirect_stdout_to_file();
-
     print_hello_world();
     fflush(stdout);
     check_printf_output();
-
-    restore_stdout();
 }
