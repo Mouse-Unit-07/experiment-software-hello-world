@@ -27,7 +27,7 @@ constexpr const char *TEST_FILE{"test_output.txt"};
 void redirect_stdout_to_file(void)
 {
     standard_output = stdout;
-    CHECK(freopen(TEST_FILE, "w+", stdout) != NULL);
+    CHECK(freopen(TEST_FILE, "w+", stdout) != nullptr);
 }
 
 void check_printf_output(void)
@@ -47,9 +47,9 @@ void check_printf_output(void)
 
 void restore_stdout(void)
 {
-    CHECK(stdout != NULL);
+    CHECK(stdout != nullptr);
     fclose(stdout);
-    CHECK(freopen("CON", "w", standard_output) != NULL);
+    CHECK(freopen("CON", "w", standard_output) != nullptr);
 }
 
 /*============================================================================*/
