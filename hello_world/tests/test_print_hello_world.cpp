@@ -19,10 +19,48 @@ extern "C" {
 #include <CppUTest/TestHarness.h>
 
 /*============================================================================*/
-/*                             Private Definitions                            */
+/*                             Public Definitions                             */
 /*============================================================================*/
-namespace
+extern "C"
 {
+
+FILE *standard_output{nullptr};
+const char TEST_FILE[] = "test_output.txt";
+
+}
+
+void redirect_stdout_to_file(void)
+{
+    standard_output = stdout;
+    CHECK(freopen(TEST_FILE, "w+", stdout) != NULL);
+}
+
+void check_printf_output(void)
+{
+    constexpr std::size_t MAX_BUFFER_SIZE{128};
+    std::array<char, MAX_BUFFER_SIZE> buffer{};
+    
+    FILE *file = fopen("test_output.txt", "r");
+    CHECK(file != NULL);
+    fread(buffer.data(), sizeof(char), buffer.size(), file);
+    fclose(file);
+    STRCMP_EQUAL("Hello World\r\n", buffer.data());
+}
+
+void restore_stdout(void)
+{
+    CHECK(stdout != NULL);
+    fclose(stdout);
+    CHECK(freopen("CON", "w", standard_output) != NULL);
+}
+
+/*============================================================================*/
+/*                            Mock Implementations                            */
+/*============================================================================*/
+extern "C"
+{
+
+/* none */
 
 }
 
@@ -31,7 +69,7 @@ namespace
 /*============================================================================*/
 TEST_GROUP(PrintHelloTest)
 {
-    FILE *standardOutput{nullptr};
+    
 
     void setup() override
     {
@@ -49,27 +87,11 @@ TEST_GROUP(PrintHelloTest)
 /*============================================================================*/
 TEST(PrintHelloTest, PrintsHelloWorld)
 {
-    constexpr std::size_t MAX_BUFFER_SIZE{128};
-    std::array<char, MAX_BUFFER_SIZE> buffer{};
-
-    standardOutput = stdout;
-    FILE *spyOutput = freopen("test_output.txt", "w+", stdout);
-    CHECK(spyOutput != NULL);
+    redirect_stdout_to_file();
 
     print_hello_world();
-
     fflush(stdout);
+    check_printf_output();
 
-    FILE *file = fopen("test_output.txt", "r");
-    CHECK(file != NULL);
-
-    fread(buffer.data(), sizeof(char), buffer.size(), file);
-    fclose(file);
-
-    STRCMP_EQUAL("Hello World\r\n", buffer.data());
-
-    CHECK(stdout != NULL);
-    fclose(stdout);
-    FILE *restoredOutput = freopen("CON", "w", standardOutput);
-    CHECK(restoredOutput != NULL);
+    restore_stdout();
 }
