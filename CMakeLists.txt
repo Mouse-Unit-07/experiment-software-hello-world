@@ -13,7 +13,7 @@ include(FetchContent)
 # Example dependency on Hello World project (check out Repeat Hello World project):
 #FetchContent_Declare(
 #    print_hello_world
-#    GIT_REPOSITORY https://github.com/Mouse-Unit-07/experiment-software-hello-world
+#    GIT_REPOSITORY git@github.com:Mouse-Unit-07/experiment-software-hello-world.git
 #    GIT_TAG main
 #)
 # FetchContent_MakeAvailable(print_hello_world)
