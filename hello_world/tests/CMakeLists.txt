@@ -7,7 +7,6 @@
 # \/=== Add all test and associated tested source and header files
 set_property(GLOBAL APPEND PROPERTY
     ALL_TEST_SOURCES
-    ${ALL_TEST_SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/test_print_hello_world.cpp
     ${CMAKE_SOURCE_DIR}/src/hello_world/print_hello_world.c
     ${CMAKE_SOURCE_DIR}/src/hello_world/print_hello_world.h
