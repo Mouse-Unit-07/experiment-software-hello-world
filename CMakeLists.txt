@@ -20,3 +20,18 @@ include(FetchContent)
 
 # \/=== Add all library directories (each w/ a CMakeLists.txt)
 add_subdirectory(hello_world)
+
+# \/=== Add all test directories
+if(TARGET_WINDOWS AND SUPPORTS_WINDOWS)
+    if(ENABLE_HELLO_WORLD_TESTS)
+        add_subdirectory(hello_world/tests)
+    endif()
+endif()
+
+# \/=== Create an aggregate interface library if your project has multiple libraries 
+add_library(hello_world_aggregate_lib INTERFACE)
+
+# \/=== Link to all libraries defined by your software project
+target_link_libraries(hello_world_aggregate_lib INTERFACE
+    hello_world_lib
+)
