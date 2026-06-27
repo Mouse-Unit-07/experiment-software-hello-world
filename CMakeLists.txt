@@ -23,7 +23,7 @@ add_subdirectory(hello_world)
 
 # \/=== Add all test directories
 if(TARGET_WINDOWS AND SUPPORTS_WINDOWS)
-    if(ENABLE_HELLO_WORLD_TESTS)
+    if(ENABLE_HELLO_WORLD_TESTS) # <=== Rename test on/off variable for your project
         add_subdirectory(hello_world/tests)
     endif()
 endif()
