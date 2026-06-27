@@ -35,12 +35,12 @@ void redirect_stdout_to_file(void)
 
 void check_printf_output(void)
 {
-    constexpr std::size_t kMaxBufferSize = 128;
+    constexpr std::size_t kMaxBufferSize{128};
     std::array<char, kMaxBufferSize> buffer{};
 
-    FILE *file = fopen(TEST_FILE, "r");
+    FILE *file{fopen(TEST_FILE, "r")};
     CHECK(file != nullptr);
-    const size_t bytes_read = fread(buffer.data(), 1, buffer.size() - 1, file);
+    const size_t bytes_read{fread(buffer.data(), 1, buffer.size() - 1, file)};
     CHECK(bytes_read > 0);
     fclose(file);
 
